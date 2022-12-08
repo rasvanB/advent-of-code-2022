@@ -3,9 +3,6 @@ const input = Deno.readTextFileSync("input.txt").split("\r\n");
 const grid: number[][] = input.map((line) => line.split("").map(Number));
 
 const isVisible = (x: number, y: number) => {
-  if (x <= 0 || x >= grid[0].length) return true;
-  if (y <= 0 || y >= grid.length) return true;
-
   const valid = [false, false, false, false];
   for (let i = x + 1; i < grid[0].length; i++) {
     if (grid[i][y] >= grid[x][y]) {
@@ -31,8 +28,7 @@ const isVisible = (x: number, y: number) => {
       break;
     }
   }
-  if (valid[0] && valid[1] && valid[2] && valid[3]) return false;
-  return true;
+  return !(valid[0] && valid[1] && valid[2] && valid[3]);
 };
 
 let sum = 0;
