@@ -8,47 +8,24 @@ const tailPosition: Position = [5, 0];
 
 const updateTail = (positions: [Position, Position]) => {
   const [head, tail] = positions;
-  let [left, right, up, down] = [false, false, false, false];
-  if (head[0] > tail[0] + 1) down = true;
-  if (head[0] < tail[0] - 1) up = true;
-  if (head[1] > tail[1] + 1) right = true;
-  if (head[1] < tail[1] - 1) left = true;
+  // Determine which direction the head is in relative to the tail
+  const up = head[0] < tail[0] - 1;
+  const down = head[0] > tail[0] + 1;
+  const left = head[1] < tail[1] - 1;
+  const right = head[1] > tail[1] + 1;
 
   if (up) {
-    if (head[1] > tail[1]) {
-      tail[0]--;
-      tail[1]++;
-    } else if (head[1] < tail[1]) {
-      tail[0]--;
-      tail[1]--;
-    } else tail[0]--;
-  }
-  if (down) {
-    if (head[1] > tail[1]) {
-      tail[0]++;
-      tail[1]++;
-    } else if (head[1] < tail[1]) {
-      tail[0]++;
-      tail[1]--;
-    } else tail[0]++;
-  }
-  if (left) {
-    if (head[0] > tail[0]) {
-      tail[0]++;
-      tail[1]--;
-    } else if (head[0] < tail[0]) {
-      tail[0]--;
-      tail[1]--;
-    } else tail[1]--;
-  }
-  if (right) {
-    if (head[0] > tail[0]) {
-      tail[0]++;
-      tail[1]++;
-    } else if (head[0] < tail[0]) {
-      tail[0]--;
-      tail[1]++;
-    } else tail[1]++;
+    tail[0]--;
+    tail[1] += head[1] > tail[1] ? 1 : head[1] < tail[1] ? -1 : 0;
+  } else if (down) {
+    tail[0]++;
+    tail[1] += head[1] > tail[1] ? 1 : head[1] < tail[1] ? -1 : 0;
+  } else if (left) {
+    tail[1]--;
+    tail[0] += head[0] > tail[0] ? 1 : head[0] < tail[0] ? -1 : 0;
+  } else if (right) {
+    tail[1]++;
+    tail[0] += head[0] > tail[0] ? 1 : head[0] < tail[0] ? -1 : 0;
   }
 };
 
