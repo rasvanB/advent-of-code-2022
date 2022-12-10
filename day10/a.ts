@@ -6,18 +6,14 @@ let total = 0;
 
 for (const instructions of input) {
   const [, args] = instructions.split(" ").map(Number);
+  const numberOfCycles = args ? 2 : 1;
 
-  if (args) {
-    for (let i = 0; i < 2; i++) {
-      if ((currentCycle - 20) % 40 === 0) total += currentCycle * x;
-      currentCycle++;
-    }
-    x += args;
-  } else {
+  for (let i = 0; i < numberOfCycles; i++) {
     if ((currentCycle - 20) % 40 === 0) total += currentCycle * x;
     currentCycle++;
-    continue;
   }
+
+  x += args ? args : 0;
 }
 
 console.log(total);
