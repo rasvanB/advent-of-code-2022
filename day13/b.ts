@@ -13,9 +13,6 @@ const comparePair = (a: Packet, b: Packet): string | undefined => {
   if (Array.isArray(a) && !Array.isArray(b)) return comparePair(a, [b]);
   if (!Array.isArray(a) && Array.isArray(b)) return comparePair([a], b);
 
-  if (!a) return "smaller";
-  if (!b) return "bigger";
-
   if (Array.isArray(a) && Array.isArray(b)) {
     const len = Math.min(a.length, b.length);
     for (let i = 0; i < len; i++) {
