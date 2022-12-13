@@ -1,6 +1,9 @@
 const input = Deno.readTextFileSync("input.txt").split("\r\n");
 
-const comparePair = (a: any, b: any): any => {
+type Base = number | number[];
+type Packet = Base | Base[];
+
+const comparePair = (a: Packet, b: Packet): string | undefined => {
   if (typeof a === "number" && typeof b === "number") {
     if (a < b) return "smaller";
     if (a > b) return "bigger";
@@ -31,6 +34,7 @@ for (let i = 0; i < input.length; i += 3) {
   const [line1, line2] = input.slice(i, i + 2).map((line) => JSON.parse(line));
   lines.push(line1, line2);
 }
+
 const sortedLines = lines.sort((a, b) => {
   const result = comparePair(a, b);
   if (result === "smaller") return -1;

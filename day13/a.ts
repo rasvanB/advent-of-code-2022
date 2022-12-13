@@ -1,6 +1,9 @@
 const input = Deno.readTextFileSync("input.txt").split("\r\n");
 
-const comparePair = (a: any, b: any): any => {
+type Base = number | number[];
+type Packet = Base | Base[];
+
+const comparePair = (a: Packet, b: Packet): string | undefined => {
   if (typeof a === "number" && typeof b === "number") {
     if (a < b) return "smaller";
     if (a > b) return "bigger";
