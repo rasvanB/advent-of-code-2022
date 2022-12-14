@@ -75,12 +75,6 @@ const dropSand = () => {
   if (pointToString(currentPos) === "500,0") return true;
 };
 
-let count = 0;
-
-while (true) {
-  count++;
-  if (dropSand()) {
-    console.log(count);
-    break;
-  }
-}
+let count = 1;
+while (!dropSand()) count++;
+console.log(count);

@@ -69,13 +69,6 @@ const dropSand = () => {
   }
 };
 
-dropSand();
 let count = 0;
-
-while (true) {
-  count++;
-  if (dropSand()) {
-    console.log(count);
-    break;
-  }
-}
+while (!dropSand()) count++;
+console.log(count);
