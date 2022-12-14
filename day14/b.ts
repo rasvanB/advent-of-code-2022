@@ -1,5 +1,5 @@
 const input = Deno.readTextFileSync("input.txt").split("\r\n");
-
+console.time("t");
 type Point = [number, number];
 const filledPoints: Set<string> = new Set();
 
@@ -21,7 +21,6 @@ const drawLine = (a: Point, b: Point) => {
 
 for (const line of input) {
   const points = line.split(" -> ");
-
   for (let i = 0; i < points.length - 1; i++) {
     const pair = points.slice(i, i + 2);
     const [a, b] = pair.map((p) => p.split(",").map(Number) as Point);
@@ -29,11 +28,11 @@ for (const line of input) {
   }
 }
 
-const movements = {
-  down: [0, 1],
-  downLeft: [-1, 1],
-  downRight: [1, 1],
-};
+const movements = [
+  [0, 1],
+  [-1, 1],
+  [1, 1],
+] as const;
 
 const getBottomLimit = () => {
   let max = -Infinity;
@@ -46,35 +45,39 @@ const getBottomLimit = () => {
 
 const bottomLimit = getBottomLimit();
 
-const dropSand = () => {
-  const currentPos: Point = [500, 0];
-
+const dropSand = (position: Point) => {
   while (true) {
-    const startingPos: Point = [...currentPos];
+    const startingPos: Point = position.slice() as Point;
 
     if (startingPos[1] === bottomLimit - 1) {
       filledPoints.add(pointToString(startingPos));
-      break;
+      return;
     }
 
-    for (const [dx, dy] of Object.values(movements)) {
-      const [x, y] = currentPos;
-      const newPos = [x + dx, y + dy] as Point;
-
-      if (!filledPoints.has(pointToString(newPos))) {
-        currentPos[0] += dx;
-        currentPos[1] += dy;
+    for (let i = 0; i < 3; i++) {
+      if (
+        !filledPoints.has(
+          pointToString([
+            position[0] + movements[i][0],
+            position[1] + movements[i][1],
+          ])
+        )
+      ) {
+        position[0] += movements[i][0];
+        position[1] += movements[i][1];
         break;
       }
     }
-    if (pointToString(startingPos) === pointToString(currentPos)) {
-      filledPoints.add(pointToString(currentPos));
+
+    if (startingPos[0] === position[0] && startingPos[1] === position[1]) {
+      filledPoints.add(pointToString(position));
       break;
     }
   }
-  if (pointToString(currentPos) === "500,0") return true;
+  if (position[0] === 500 && position[1] === 0) return true;
 };
 
 let count = 1;
-while (!dropSand()) count++;
+while (!dropSand([500, 0])) count++;
 console.log(count);
+console.timeEnd("t");

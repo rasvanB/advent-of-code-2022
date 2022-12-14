@@ -1,5 +1,5 @@
 const input = Deno.readTextFileSync("input.txt").split("\r\n");
-
+console.time("t");
 type Point = [number, number];
 const filledPoints: Set<string> = new Set();
 
@@ -29,12 +29,6 @@ for (const line of input) {
   }
 }
 
-const movements = {
-  down: [0, 1],
-  downLeft: [-1, 1],
-  downRight: [1, 1],
-};
-
 const getBottomLimit = () => {
   let max = -Infinity;
   for (const point of filledPoints) {
@@ -44,31 +38,42 @@ const getBottomLimit = () => {
   return max;
 };
 
-const dropSand = () => {
-  const currentPos: Point = [500, 0];
+const movements = [
+  [0, 1],
+  [-1, 1],
+  [1, 1],
+] as const;
+
+const dropSand = (position: Point) => {
   const bottomLimit = getBottomLimit();
 
   while (true) {
-    const startingPos: Point = [...currentPos];
+    const startingPos = position.slice() as Point;
 
-    for (const [dx, dy] of Object.values(movements)) {
-      const [x, y] = currentPos;
-      const newPos = [x + dx, y + dy] as Point;
-
-      if (!filledPoints.has(pointToString(newPos))) {
-        currentPos[0] += dx;
-        currentPos[1] += dy;
+    for (let i = 0; i < 3; i++) {
+      if (
+        !filledPoints.has(
+          pointToString([
+            position[0] + movements[i][0],
+            position[1] + movements[i][1],
+          ])
+        )
+      ) {
+        position[0] += movements[i][0];
+        position[1] += movements[i][1];
         break;
       }
     }
-    if (currentPos[1] >= bottomLimit) return true;
-    if (pointToString(startingPos) === pointToString(currentPos)) {
-      filledPoints.add(pointToString(currentPos));
+    if (position[1] >= bottomLimit) return true;
+
+    if (startingPos[0] === position[0] && startingPos[1] === position[1]) {
+      filledPoints.add(pointToString(position));
       break;
     }
   }
 };
 
 let count = 0;
-while (!dropSand()) count++;
+while (!dropSand([500, 0])) count++;
 console.log(count);
+console.timeLog("t");
