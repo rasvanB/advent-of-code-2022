@@ -47,10 +47,10 @@ const bottomLimit = getBottomLimit();
 
 const dropSand = (position: Point) => {
   while (true) {
-    const startingPos: Point = position.slice() as Point;
+    let changed = false;
 
-    if (startingPos[1] === bottomLimit - 1) {
-      filledPoints.add(pointToString(startingPos));
+    if (position[1] === bottomLimit - 1) {
+      filledPoints.add(pointToString(position));
       return;
     }
 
@@ -65,11 +65,12 @@ const dropSand = (position: Point) => {
       ) {
         position[0] += movements[i][0];
         position[1] += movements[i][1];
+        changed = true;
         break;
       }
     }
 
-    if (startingPos[0] === position[0] && startingPos[1] === position[1]) {
+    if (!changed) {
       filledPoints.add(pointToString(position));
       break;
     }
