@@ -12,26 +12,26 @@ const input = Deno.readTextFileSync("input.txt")
   );
 
 type Point = [number, number];
-const map = new Map<string, string>();
+const map = new Map<string, number>();
+
 const pointToString = (p: Point) => p.join(",");
 
+const distanceBetween = (a: Point, b: Point) =>
+  Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+
 const findBeacon = (Y: number) => {
-  const can = new Set<number>();
   const intervals: number[][] = [];
   let minX = Infinity;
   let maxX = -Infinity;
-  for (const [sensor, beacon] of map) {
+  for (const [sensor, distance] of map) {
     const [sx, sy] = sensor.split(",").map(Number) as Point;
-    const [bx, by] = beacon.split(",").map(Number) as Point;
-
-    const distance = Math.abs(sx - bx) + Math.abs(sy - by);
     const offset = distance - Math.abs(sy - Y);
 
     if (offset <= 0) continue;
-    minX = Math.min(minX, sx - offset);
-    maxX = Math.max(maxX, sx + offset);
-    intervals.push([sx - offset, sx + offset]);
-    if (by == Y) can.add(bx);
+    const interval = [sx - offset, sx + offset];
+    minX = Math.min(minX, interval[0]);
+    maxX = Math.max(maxX, interval[1]);
+    intervals.push(interval);
   }
 
   intervals.sort((a, b) => a[0] - b[0]);
@@ -46,7 +46,7 @@ const findBeacon = (Y: number) => {
 
 for (const line of input) {
   const [sensor, beacon] = line;
-  map.set(pointToString(sensor), pointToString(beacon));
+  map.set(pointToString(sensor), distanceBetween(sensor, beacon));
 }
 
 for (let i = 0; i <= 4000000; i++) {
